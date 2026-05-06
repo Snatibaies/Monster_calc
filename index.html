@@ -21,13 +21,16 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-color: #ffffff;
+            overflow: hidden;
         }
+
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.3); 
+            background: rgba(255, 255, 255, 0.2); 
             z-index: -1;
         }
+
         .main-layout {
             display: flex;
             align-items: center;
@@ -37,37 +40,95 @@
             padding: 20px;
             z-index: 1;
         }
+
         .side-container { width: 300px; text-align: center; }
         .side-content { width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
+
+        /* --- GLASSMORPHISM CARD --- */
         .calculator-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.45); /* Base translúcida */
             padding: 40px;
             width: 420px; 
             text-align: center;
-            border-radius: 20px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            
+            /* Efecto Esmerilado */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            
+            /* Borde de Refracción */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            
+            /* Sombra de profundidad */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+            
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .progress-container { margin: 20px 0; text-align: left; }
-        progress { width: 100%; height: 20px; appearance: none; }
-        progress::-webkit-progress-bar { background-color: #eee; border-radius: 10px; }
-        progress::-webkit-progress-value { background-color: #39FF14; border-radius: 10px; transition: width 0.5s ease; }
 
-        h1 { font-size: 1.3rem; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; margin-top: 0; }
+        /* Elevación al pasar el mouse */
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* Destello dinámico (Reflejo de cristal) */
+        .calculator-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: skewX(-25deg);
+            transition: 0.7s;
+        }
+
+        .calculator-card:hover::before {
+            left: 150%;
+        }
+
+        /* --- ELEMENTOS INTERNOS --- */
+        h1 { 
+            font-size: 1.3rem; 
+            text-transform: uppercase; 
+            border-bottom: 2px solid rgba(0,0,0,0.1); 
+            padding-bottom: 10px; 
+            margin-top: 0; 
+            color: #000;
+        }
         
+        .info-box { 
+            background: rgba(255, 255, 255, 0.5); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border-radius: 12px; 
+            font-size: 0.85rem; 
+        }
+
         .input-wrapper { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         
         select, input { 
             width: 100%; 
             padding: 12px; 
-            border-radius: 10px; 
-            border: 1px solid #ddd; 
+            border-radius: 12px; 
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+            background: rgba(255, 255, 255, 0.7);
             text-align: center; 
             font-size: 1rem; 
             box-sizing: border-box; 
+            outline: none;
+            transition: 0.3s;
         }
+
+        select:focus, input:focus {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #39FF14;
+        }
+
         button#calc-btn { 
             background: #000; 
             color: #fff; 
@@ -76,22 +137,40 @@
             width: 100%; 
             font-weight: bold; 
             cursor: pointer; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             text-transform: uppercase; 
+            transition: 0.3s;
         }
+
+        button#calc-btn:hover {
+            background: #333;
+            letter-spacing: 1px;
+        }
+
+        .progress-container { margin: 20px 0; text-align: left; }
+        progress { width: 100%; height: 20px; appearance: none; }
+        progress::-webkit-progress-bar { background-color: rgba(0,0,0,0.05); border-radius: 10px; }
+        progress::-webkit-progress-value { 
+            background: linear-gradient(90deg, #2ebf12, #39FF14);
+            border-radius: 10px; 
+            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
         .steam-widget-container {
             margin-top: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        #resultado { margin-top: 20px; }
+        #resultado { margin-top: 20px; font-weight: 500; }
     </style>
 </head>
 <body>
+
 <audio id="bg-music" loop>
     <source src="cancion.mp3" type="audio/mpeg">
 </audio>
+
 <div class="main-layout">
     <div class="side-container">
         <img id="img-izq" src="monster_white.jpg" class="side-content">
@@ -100,7 +179,7 @@
 
     <div class="calculator-card">
         <h1>¿Cuantas Monsters pal Helldiver?</h1>
-        <div class="info-box" style="background: rgba(240, 240, 240, 0.8); padding: 12px; margin-bottom: 15px; border-radius: 10px; font-size: 0.85rem;">
+        <div class="info-box">
             Precio lata: <b>$2.88USD (1 latita)</b> | Helldivers: <b>$39.99USD</b>
         </div>
 
@@ -115,13 +194,12 @@
         <button id="calc-btn" onclick="procesarCalculo()">Calculal</button>
 
         <div class="progress-container">
-            <label id="progress-label" style="font-size: 0.8rem; color: #555;">Progreso: 0%</label>
+            <label id="progress-label" style="font-size: 0.8rem; color: #555; font-weight: bold;">Progreso: 0%</label>
             <progress id="monster-progress" value="0" max="39.99"></progress>
         </div>
 
         <div id="resultado"></div>
 
-        <!-- WIDGET OFICIAL DE STEAM -->
         <div id="steam-widget" class="steam-widget-container hidden">
             <iframe src="https://store.steampowered.com/widget/553850/" frameborder="0" width="100%" height="190"></iframe>
         </div>
@@ -164,25 +242,22 @@
             document.getElementById('img-der').classList.add('hidden');
             document.getElementById('gif-izq').classList.remove('hidden');
             document.getElementById('gif-der').classList.remove('hidden');
-            
             steamWidget.classList.remove('hidden');
-            
-            res.innerHTML = `<h3 style="color: green;">HAIL AGARTHA, HAILDIVERS</h3>`;
+            res.innerHTML = `<h3 style="color: #1a7f1a;">HAIL AGARTHA, HAILDIVERS</h3>`;
         } else {
             music.pause(); music.currentTime = 0;
             document.getElementById('img-izq').classList.remove('hidden');
             document.getElementById('img-der').classList.remove('hidden');
             document.getElementById('gif-izq').classList.add('hidden');
             document.getElementById('gif-der').classList.add('hidden');
-            
             steamWidget.classList.add('hidden');
 
             res.innerHTML = `
-                <div style="text-align: left; padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #eee;">
-                    <b>Estado:</b><br>
+                <div style="text-align: left; padding: 12px; background: rgba(255,255,255,0.4); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                    <b>Current State:</b><br>
                     • Dolale: <b>$${usdEquivalentes.toFixed(2)} USD</b><br>
-                    • tenés: <b>${latasTengo}</b> latitas.<br>
-                    • Te faltan: <b style="font-size:1.4rem; color:red;">${latasFaltantes}</b> latitass.
+                    • Tenés: <b>${latasTengo}</b> latitas.<br>
+                    • Te faltan: <b style="font-size:1.2rem; color:#d32f2f;">${latasFaltantes}</b> latitass.
                 </div>
             `;
         }
