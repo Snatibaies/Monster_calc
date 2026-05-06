@@ -22,14 +22,12 @@
             background-attachment: fixed;
             background-color: #ffffff;
         }
-
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.3); 
             z-index: -1;
         }
-
         .main-layout {
             display: flex;
             align-items: center;
@@ -39,22 +37,19 @@
             padding: 20px;
             z-index: 1;
         }
-
         .side-container { width: 300px; text-align: center; }
         .side-content { width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .hidden { display: none; }
-
         .calculator-card {
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
-            width: 420px; /* Un poco más ancho para que el widget entre bien */
+            width: 420px; 
             text-align: center;
             border-radius: 20px;
             border: 1px solid #eaeaea;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             backdrop-filter: blur(8px);
         }
-
         .progress-container { margin: 20px 0; text-align: left; }
         progress { width: 100%; height: 20px; appearance: none; }
         progress::-webkit-progress-bar { background-color: #eee; border-radius: 10px; }
@@ -73,7 +68,6 @@
             font-size: 1rem; 
             box-sizing: border-box; 
         }
-
         button#calc-btn { 
             background: #000; 
             color: #fff; 
@@ -85,24 +79,19 @@
             border-radius: 10px; 
             text-transform: uppercase; 
         }
-
-        /* Estilo para el contenedor del Widget */
         .steam-widget-container {
             margin-top: 20px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
         #resultado { margin-top: 20px; }
     </style>
 </head>
 <body>
-
 <audio id="bg-music" loop>
     <source src="cancion.mp3" type="audio/mpeg">
 </audio>
-
 <div class="main-layout">
     <div class="side-container">
         <img id="img-izq" src="monster_white.jpg" class="side-content">
@@ -117,13 +106,13 @@
 
         <div class="input-wrapper">
             <select id="tipoCalculo">
-                <option value="usd">Dólares (USD)</option>
-                <option value="latas">Cantidad de Latas</option>
+                <option value="usd">Dolale (USD)</option>
+                <option value="latas">Latitas</option>
             </select>
             <input type="number" id="valorInput" placeholder="Ej: 15.50" step="0.01">
         </div>
         
-        <button id="calc-btn" onclick="procesarCalculo()">Calcular</button>
+        <button id="calc-btn" onclick="procesarCalculo()">Calculal</button>
 
         <div class="progress-container">
             <label id="progress-label" style="font-size: 0.8rem; color: #555;">Progreso: 0%</label>
@@ -176,7 +165,6 @@
             document.getElementById('gif-izq').classList.remove('hidden');
             document.getElementById('gif-der').classList.remove('hidden');
             
-            // MOSTRAR EL WIDGET
             steamWidget.classList.remove('hidden');
             
             res.innerHTML = `<h3 style="color: green;">HAIL AGARTHA, HAILDIVERS</h3>`;
@@ -187,7 +175,6 @@
             document.getElementById('gif-izq').classList.add('hidden');
             document.getElementById('gif-der').classList.add('hidden');
             
-            // OCULTAR EL WIDGET SI BAJA DEL MONTO
             steamWidget.classList.add('hidden');
 
             res.innerHTML = `
