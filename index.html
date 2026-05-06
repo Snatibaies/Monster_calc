@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monsters para Helldivers</title>
+    <title>Monsters pal Helldivers</title>
     
     <link rel="icon" type="image/png" href="lol.ico">
 
@@ -47,7 +47,7 @@
         .calculator-card {
             background: rgba(255, 255, 255, 0.9);
             padding: 40px;
-            width: 380px;
+            width: 420px; /* Un poco más ancho para que el widget entre bien */
             text-align: center;
             border-radius: 20px;
             border: 1px solid #eaeaea;
@@ -62,7 +62,6 @@
 
         h1 { font-size: 1.3rem; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; margin-top: 0; }
         
-        /* Estilos de inputs y selectores */
         .input-wrapper { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         
         select, input { 
@@ -87,20 +86,15 @@
             text-transform: uppercase; 
         }
 
-        .steam-link {
-            display: inline-block;
-            margin-top: 15px;
-            background-color: #171a21;
-            color: #fff;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
+        /* Estilo para el contenedor del Widget */
+        .steam-widget-container {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .steam-link:hover { background-color: #2a475e; }
 
-        #resultado { margin-top: 20px; min-height: 80px; }
+        #resultado { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -116,15 +110,15 @@
     </div>
 
     <div class="calculator-card">
-        <h1>¿Monster pal Helldivers?</h1>
+        <h1>¿Cuantas Monsters pal Helldiver?</h1>
         <div class="info-box" style="background: rgba(240, 240, 240, 0.8); padding: 12px; margin-bottom: 15px; border-radius: 10px; font-size: 0.85rem;">
-            Precio: <b>$2.88USD (1 lata)</b> | HELLDIVERS: <b>$39.99 USD</b>
+            Precio lata: <b>$2.88USD (1 latita)</b> | Helldivers: <b>$39.99USD</b>
         </div>
 
         <div class="input-wrapper">
             <select id="tipoCalculo">
-                <option value="usd">Ingresar Dólares (USD)</option>
-                <option value="latas">Ingresar Cantidad de Latas</option>
+                <option value="usd">Dólares (USD)</option>
+                <option value="latas">Cantidad de Latas</option>
             </select>
             <input type="number" id="valorInput" placeholder="Ej: 15.50" step="0.01">
         </div>
@@ -137,10 +131,10 @@
         </div>
 
         <div id="resultado"></div>
-        <div id="steam-display" class="hidden">
-            <a href="https://store.steampowered.com/app/553850/HELLDIVERS_2/" target="_blank" class="steam-link">
-                COMPRAR COMPRAR COMPRAR
-            </a>
+
+        <!-- WIDGET OFICIAL DE STEAM -->
+        <div id="steam-widget" class="steam-widget-container hidden">
+            <iframe src="https://store.steampowered.com/widget/553850/" frameborder="0" width="100%" height="190"></iframe>
         </div>
     </div>
 
@@ -161,14 +155,12 @@
         const res = document.getElementById('resultado');
         const progressBar = document.getElementById('monster-progress');
         const progressLabel = document.getElementById('progress-label');
-        const steamDisplay = document.getElementById('steam-display');
+        const steamWidget = document.getElementById('steam-widget');
 
         if (isNaN(inputVal) || inputVal < 0) return;
 
-        // Lógica dual: Convertir a USD si la entrada es en latas
         let usdEquivalentes = (tipo === 'latas') ? (inputVal * PRECIO_LATA) : inputVal;
 
-        // Actualizar barra de progreso
         const progresoCerrado = Math.min(usdEquivalentes, META); 
         progressBar.value = progresoCerrado;
         const porcentaje = ((progresoCerrado / META) * 100).toFixed(0);
@@ -183,22 +175,27 @@
             document.getElementById('img-der').classList.add('hidden');
             document.getElementById('gif-izq').classList.remove('hidden');
             document.getElementById('gif-der').classList.remove('hidden');
-            steamDisplay.classList.remove('hidden');
-            res.innerHTML = `<h3 style="color: green;">MANDATE A COMPRAR JELDAIVEL</h3><p>Tenés presupuesto para ${latasTengo} latas.</p>`;
+            
+            // MOSTRAR EL WIDGET
+            steamWidget.classList.remove('hidden');
+            
+            res.innerHTML = `<h3 style="color: green;">HAIL AGARTHA, HAILDIVERS</h3>`;
         } else {
             music.pause(); music.currentTime = 0;
             document.getElementById('img-izq').classList.remove('hidden');
             document.getElementById('img-der').classList.remove('hidden');
             document.getElementById('gif-izq').classList.add('hidden');
             document.getElementById('gif-der').classList.add('hidden');
-            steamDisplay.classList.add('hidden');
+            
+            // OCULTAR EL WIDGET SI BAJA DEL MONTO
+            steamWidget.classList.add('hidden');
 
             res.innerHTML = `
                 <div style="text-align: left; padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #eee;">
                     <b>Estado:</b><br>
                     • Dolale: <b>$${usdEquivalentes.toFixed(2)} USD</b><br>
-                    • Tenes: <b>${latasTengo}</b> latitas.<br>
-                    • Te faltan: <b style="font-size:1.4rem; color:red;">${latasFaltantes}</b> latitas.
+                    • tenés: <b>${latasTengo}</b> latitas.<br>
+                    • Te faltan: <b style="font-size:1.4rem; color:red;">${latasFaltantes}</b> latitass.
                 </div>
             `;
         }
