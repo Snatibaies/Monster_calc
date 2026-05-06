@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Monster Ultra White</title>
+    <title>Monster Tracker - Helldivers Edition</title>
+    
+    <link rel="icon" type="image/png" href="lol.ico">
+
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -12,192 +15,185 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
-            /* Configuración del fondo */
-            background-image: url('niggamap.jpg'); /* Asegúrate de que el nombre coincida con tu archivo */
+            background-image: url('niggamap.jpg'); 
             background-size: contain;
             background-position: center;
-            background-attachment: fixed;
             background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #ffffff;
         }
 
-        /* Capa opcional para mejorar legibilidad del fondo */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.2); /* Aclara un poco la imagen */
+            background: rgba(255, 255, 255, 0.3); 
             z-index: -1;
         }
 
         .main-layout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Esto empuja los elementos a los extremos */
-    width: 90vw; /* Usa el 90% del ancho de la ventana */
-    max-width: 1400px; 
-    padding: 20px;
-    z-index: 1;
-}
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            width: 95vw; 
+            max-width: 1600px; 
+            padding: 20px;
+            z-index: 1;
+        }
 
-        .side-img {
-            width: 280px;
+        /* Contenedores de imágenes laterales */
+        .side-container {
+            width: 300px;
+            text-align: center;
+        }
+
+        .side-content {
+            width: 100%;
             height: auto;
-            border-radius: 15px;
-            filter: grayscale(20%);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: opacity 0.5s ease;
+        }
+
+        /* Ocultar GIFs inicialmente */
+        .hidden {
+            display: none;
         }
 
         .calculator-card {
-            background: rgba(255, 255, 255, 0.95); /* Fondo blanco con ligera transparencia */
+            background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             width: 350px;
             text-align: center;
             border-radius: 20px;
             border: 1px solid #eaeaea;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px); /* Efecto de desenfoque detrás de la tarjeta */
+            backdrop-filter: blur(8px);
         }
 
-        h1 {
-            font-size: 1.4rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            color: #000;
-            border-bottom: 1px solid #000;
-            padding-bottom: 10px;
-        }
-
-        .info-box {
-            background-color: rgba(249, 249, 249, 0.8);
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            border-radius: 10px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            color: #444;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            text-align: center;
-            box-sizing: border-box;
-            background: white;
-        }
-
-        button {
-            background-color: #000;
-            color: #fff;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            border-radius: 10px;
-        }
-
-        button:hover {
-            background-color: #333;
-            transform: scale(1.02);
-        }
-
-        #resultado {
-            margin-top: 30px;
+        .progress-container {
+            margin: 20px 0;
             text-align: left;
-            border-top: 1px dashed #ccc;
-            padding-top: 20px;
         }
 
-        .res-item {
-            margin-bottom: 15px;
-            font-size: 1rem;
+        progress {
+            width: 100%;
+            height: 20px;
+            appearance: none;
         }
 
-        .number-big {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #000;
+        progress::-webkit-progress-bar {
+            background-color: #eee;
+            border-radius: 10px;
         }
+
+        progress::-webkit-progress-value {
+            background-color: #39FF14; 
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        h1 { font-size: 1.3rem; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .info-box { background: rgba(240, 240, 240, 0.8); padding: 15px; margin-bottom: 20px; border-radius: 10px; font-size: 0.9rem; }
+        input { width: 100%; 
+    padding: 10px; /* Reducimos el padding para que no sea tan alta */
+    margin-bottom: 20px; 
+    border-radius: 10px; 
+    border: 1px solid #ddd; 
+    text-align: center; 
+    font-size: 1rem; 
+    /* Crucial para que el padding no "empuje" el ancho hacia afuera */
+    box-sizing: border-box; }
+        button#calc-btn { background: #000; color: #fff; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 10px; text-transform: uppercase; }
+        #resultado { margin-top: 20px; }
     </style>
 </head>
 <body>
 
+<audio id="bg-music" loop>
+    <source src="cancion.mp3" type="audio/mpeg">
+</audio>
+
 <div class="main-layout">
-    <img src="monster_white.jpg" alt="Monster Ultra" class="side-img">
+    <!-- Lado Izquierdo -->
+    <div class="side-container">
+        <img id="img-izq" src="monster_white.jpg" class="side-content">
+        <img id="gif-izq" src="izquierda.gif" class="side-content hidden">
+    </div>
 
     <div class="calculator-card">
-        <h1>¿Cuanta montel faltan pal jeldaive?</h1>
-        
+        <h1>¿Cuanta montel faltan pal Helldive?</h1>
         <div class="info-box">
-            Precio Latita: <strong>$2.88 USD ($4000)</strong><br> 
-            Helldaiver: <strong>$39.99 USD</strong> (14 latita)
+            Precio latita: <b>$2.88 USD ($4000)</b><br>
+            Jeldaiver: <b>$39.99 USD</b>
         </div>
 
-        <label>¿Cuánta latita tenemo? (en dolale$$$)</label>
-        <input type="number" id="usdInput" placeholder="Ej: 15.50" step="0.01">
+        <input type="number" id="usdInput" placeholder="¿Cuanta latita tenemo? (en dolale)" step="0.01">
         
-        <button onclick="ejecutarCalculo()">Calculal</button>
+        <button id="calc-btn" onclick="activarYCalcular()">Calcular Progreso</button>
+
+        <div class="progress-container">
+            <label id="progress-label" style="font-size: 0.8rem; color: #555;">Progreso: 0%</label>
+            <progress id="monster-progress" value="0" max="39.99"></progress>
+        </div>
 
         <div id="resultado"></div>
     </div>
 
-    <img src="pharaoh.jpg" alt="Pharaoh" class="side-img">
+    <!-- Lado Derecho -->
+    <div class="side-container">
+        <img id="img-der" src="pharaoh.jpg" class="side-content">
+        <img id="gif-der" src="derecha.gif" class="side-content hidden">
+    </div>
 </div>
 
 <script>
+    const music = document.getElementById('bg-music');
+
+    function activarYCalcular() {
+        // 1. Activar Música
+        music.play().catch(e => console.log("Música esperando interacción"));
+
+        // 2. Intercambiar Fotos por GIFs
+        document.getElementById('img-izq').classList.add('hidden');
+        document.getElementById('img-der').classList.add('hidden');
+        document.getElementById('gif-izq').classList.remove('hidden');
+        document.getElementById('gif-der').classList.remove('hidden');
+
+        // 3. Ejecutar Cálculo
+        ejecutarCalculo();
+    }
+
     function ejecutarCalculo() {
-        const PRECIO_LATA = 2.88;
-        const META_TOTAL = 39.99;
-        
-        const usdIngresados = parseFloat(document.getElementById('usdInput').value);
-        const display = document.getElementById('resultado');
+        const PRECIO = 2.88;
+        const META = 39.99;
+        const usd = parseFloat(document.getElementById('usdInput').value);
+        const res = document.getElementById('resultado');
+        const progressBar = document.getElementById('monster-progress');
+        const progressLabel = document.getElementById('progress-label');
 
-        if (isNaN(usdIngresados) || usdIngresados < 0) {
-            display.innerHTML = "<p style='color:red;'>Pone un numero válido papits</p>";
-            return;
-        }
+        if (isNaN(usd) || usd < 0) return;
 
-        const latasTengo = (usdIngresados / PRECIO_LATA).toFixed(2);
-        const dineroFaltante = META_TOTAL - usdIngresados;
+        const progresoCerrado = Math.min(usd, META); 
+        progressBar.value = progresoCerrado;
+        const porcentaje = ((progresoCerrado / META) * 100).toFixed(0);
+        progressLabel.innerText = `Progreso: ${porcentaje}%`;
 
-        if (dineroFaltante <= 0) {
-            display.innerHTML = `
-                <div class="res-item">
-                    ¡Ya tenemo jeldaiver!
-                    <span class="number-big">${latasTengo} Latas</span>
-                </div>`;
+        const tengo = (usd / PRECIO).toFixed(2);
+        const faltan = Math.ceil((META - usd) / PRECIO);
+
+        if (usd >= META) {
+            res.innerHTML = `<h3 style="color: green;">¡DEMOCRACIA ALCANZADA!</h3>`;
         } else {
-            const latasFaltantes = Math.ceil(dineroFaltante / PRECIO_LATA);
-
-            display.innerHTML = `
-                <div class="res-item">
-                    Tenemo:
-                    <span class="number-big">${latasTengo} Latita</span>
-                </div>
-                <div class="res-item">
-                    Faltan:
-                    <span class="number-big" style="color: #d00;">${latasFaltantes} Latita</span>
+            res.innerHTML = `
+                <div style="text-align: left; padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #eee;">
+                     <b>Estado:</b><br>
+                    • Tenés: <b>${tengo}</b> latita.<br>
+                    • Faltan: <b style="font-size:1.5rem; color:red;">${faltan}</b> latita.
                 </div>
             `;
         }
     }
 </script>
-
 </body>
 </html>
