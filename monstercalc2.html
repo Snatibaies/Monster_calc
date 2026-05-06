@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monsters para Helldivers</title>
+    
+    <link rel="icon" type="image/png" href="lol.ico">
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('niggamap.jpg'); 
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #ffffff;
+        }
+
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.3); 
+            z-index: -1;
+        }
+
+        .main-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            width: 95vw; 
+            max-width: 1600px; 
+            padding: 20px;
+            z-index: 1;
+        }
+
+        .side-container { width: 300px; text-align: center; }
+        .side-content { width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hidden { display: none; }
+
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            width: 380px;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .progress-container { margin: 20px 0; text-align: left; }
+        progress { width: 100%; height: 20px; appearance: none; }
+        progress::-webkit-progress-bar { background-color: #eee; border-radius: 10px; }
+        progress::-webkit-progress-value { background-color: #39FF14; border-radius: 10px; transition: width 0.5s ease; }
+
+        h1 { font-size: 1.3rem; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; margin-top: 0; }
+        
+        /* Estilos de inputs y selectores */
+        .input-wrapper { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        
+        select, input { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 10px; 
+            border: 1px solid #ddd; 
+            text-align: center; 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+        }
+
+        button#calc-btn { 
+            background: #000; 
+            color: #fff; 
+            border: none; 
+            padding: 15px; 
+            width: 100%; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 10px; 
+            text-transform: uppercase; 
+        }
+
+        .steam-link {
+            display: inline-block;
+            margin-top: 15px;
+            background-color: #171a21;
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .steam-link:hover { background-color: #2a475e; }
+
+        #resultado { margin-top: 20px; min-height: 80px; }
+    </style>
+</head>
+<body>
+
+<audio id="bg-music" loop>
+    <source src="cancion.mp3" type="audio/mpeg">
+</audio>
+
+<div class="main-layout">
+    <div class="side-container">
+        <img id="img-izq" src="monster_white.jpg" class="side-content">
+        <img id="gif-izq" src="izquierda.gif" class="side-content hidden">
+    </div>
+
+    <div class="calculator-card">
+        <h1>¿Monster pal Helldivers?</h1>
+        <div class="info-box" style="background: rgba(240, 240, 240, 0.8); padding: 12px; margin-bottom: 15px; border-radius: 10px; font-size: 0.85rem;">
+            Precio: <b>$2.88USD (1 lata)</b> | HELLDIVERS: <b>$39.99 USD</b>
+        </div>
+
+        <div class="input-wrapper">
+            <select id="tipoCalculo">
+                <option value="usd">Ingresar Dólares (USD)</option>
+                <option value="latas">Ingresar Cantidad de Latas</option>
+            </select>
+            <input type="number" id="valorInput" placeholder="Ej: 15.50" step="0.01">
+        </div>
+        
+        <button id="calc-btn" onclick="procesarCalculo()">Calcular</button>
+
+        <div class="progress-container">
+            <label id="progress-label" style="font-size: 0.8rem; color: #555;">Progreso: 0%</label>
+            <progress id="monster-progress" value="0" max="39.99"></progress>
+        </div>
+
+        <div id="resultado"></div>
+        <div id="steam-display" class="hidden">
+            <a href="https://store.steampowered.com/app/553850/HELLDIVERS_2/" target="_blank" class="steam-link">
+                COMPRAR COMPRAR COMPRAR
+            </a>
+        </div>
+    </div>
+
+    <div class="side-container">
+        <img id="img-der" src="pharaoh.jpg" class="side-content">
+        <img id="gif-der" src="derecha.gif" class="side-content hidden">
+    </div>
+</div>
+
+<script>
+    const music = document.getElementById('bg-music');
+    const META = 39.99;
+    const PRECIO_LATA = 2.88;
+
+    function procesarCalculo() {
+        const inputVal = parseFloat(document.getElementById('valorInput').value);
+        const tipo = document.getElementById('tipoCalculo').value;
+        const res = document.getElementById('resultado');
+        const progressBar = document.getElementById('monster-progress');
+        const progressLabel = document.getElementById('progress-label');
+        const steamDisplay = document.getElementById('steam-display');
+
+        if (isNaN(inputVal) || inputVal < 0) return;
+
+        // Lógica dual: Convertir a USD si la entrada es en latas
+        let usdEquivalentes = (tipo === 'latas') ? (inputVal * PRECIO_LATA) : inputVal;
+
+        // Actualizar barra de progreso
+        const progresoCerrado = Math.min(usdEquivalentes, META); 
+        progressBar.value = progresoCerrado;
+        const porcentaje = ((progresoCerrado / META) * 100).toFixed(0);
+        progressLabel.innerText = `Progreso: ${porcentaje}%`;
+
+        const latasTengo = (usdEquivalentes / PRECIO_LATA).toFixed(2);
+        const latasFaltantes = Math.ceil((META - usdEquivalentes) / PRECIO_LATA);
+
+        if (usdEquivalentes >= META) {
+            music.play().catch(e => console.log("Error audio"));
+            document.getElementById('img-izq').classList.add('hidden');
+            document.getElementById('img-der').classList.add('hidden');
+            document.getElementById('gif-izq').classList.remove('hidden');
+            document.getElementById('gif-der').classList.remove('hidden');
+            steamDisplay.classList.remove('hidden');
+            res.innerHTML = `<h3 style="color: green;">MANDATE A COMPRAR JELDAIVEL</h3><p>Tenés presupuesto para ${latasTengo} latas.</p>`;
+        } else {
+            music.pause(); music.currentTime = 0;
+            document.getElementById('img-izq').classList.remove('hidden');
+            document.getElementById('img-der').classList.remove('hidden');
+            document.getElementById('gif-izq').classList.add('hidden');
+            document.getElementById('gif-der').classList.add('hidden');
+            steamDisplay.classList.add('hidden');
+
+            res.innerHTML = `
+                <div style="text-align: left; padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #eee;">
+                    <b>Estado:</b><br>
+                    • Dolale: <b>$${usdEquivalentes.toFixed(2)} USD</b><br>
+                    • Tenes: <b>${latasTengo}</b> latitas.<br>
+                    • Te faltan: <b style="font-size:1.4rem; color:red;">${latasFaltantes}</b> latitas.
+                </div>
+            `;
+        }
+    }
+</script>
+</body>
+</html>
